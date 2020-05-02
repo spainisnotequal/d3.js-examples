@@ -10,47 +10,57 @@
   <body>
     <a href="/">Back home</a>
     <p>Put a bar chart here...</p>
-    <div id='layout'>
-      <div id='container'>
-        <svg />
-      </div>
-    </div>
+    <div id='chart-div'></div>
   </body>
   <script>
-    const data = [4, 8, 15, 16, 23, 42];
 
-    const width = 420;
+    // set the dimensions and margins of the graph
+    const margin = { top: 30, right: 30, bottom: 30, left: 50 };
+    const  width = 460 - margin.left - margin.right;
+    const  height = 400 - margin.top - margin.bottom;
 
-    const x = d3.scaleLinear()
-          .domain([0, d3.max(data)])
-          .range([0, width]);
+    // get the data
+    d3.csv("./data/numbers.csv", d3.autoType).then((data) => {
+      // extract the values from the data (data is an arrary of { name, value } objects)
+      const values = data.map((d) => d.value);
 
-    const y = d3.scaleBand()
-          .domain(d3.range(data.length))
-          .range([0, 20 * data.length]);
+      // define the x axis
+      const x = d3.scaleLinear()
+            .domain([0, d3.max(values)])
+            .range([0, width]);
+      
+      // define the y axis
+      const y = d3.scaleBand()
+            .domain(d3.range(values.length))
+            .range([0, 20 * values.length]);
 
-    const svg = d3.select('svg')
-    .attr("width", width)
-      .attr("height", y.range()[1])
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "10")
-          .attr("text-anchor", "end");
+      // append the svg object to the body of the page
+      const svg = d3
+            .select("#chart-div")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", y.range()[1])
+            .attr("font-family", "sans-serif")
+            .attr("font-size", "10")
+            .attr("text-anchor", "end");
 
-    const bar = svg.selectAll("g")
-    .data(data)
-    .join("g")
-      .attr("transform", (d, i) => `translate(0,${y(i)})`);
+      const bar = svg.selectAll("g")
+            .data(values)
+            .join("g")
+            .attr("transform", (d, i) => `translate(0,${y(i)})`);
 
-  bar.append("rect")
-      .attr("fill", "steelblue")
-      .attr("width", x)
-      .attr("height", y.bandwidth() - 1);
+      bar.append("rect")
+        .attr("fill", "steelblue")
+        .attr("width", x)
+        .attr("height", y.bandwidth() - 1);
 
-  bar.append("text")
-      .attr("fill", "white")
-      .attr("x", d => x(d) - 3)
-      .attr("y", y.bandwidth() / 2)
-      .attr("dy", "0.35em")
-      .text(d => d);
+      bar.append("text")
+        .attr("fill", "white")
+        .attr("x", d => x(d) - 3)
+        .attr("y", y.bandwidth() / 2)
+        .attr("dy", "0.35em")
+        .text(d => d);
+    })
+    
   </script>
 </html>
