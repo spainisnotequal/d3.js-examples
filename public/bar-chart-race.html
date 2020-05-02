@@ -4,29 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bar chart race</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="javascript/bar-chart-race.js" type="module"></script>
   </head>
 
   <body>
     <a href="/">Back home</a>
     <div id='chart-div'></div>
   </body>
-  <script>
-
-    // get the data
-    d3.csv("./data/category-brands.csv", d3.autoType).then((data) => {
-      
-      // names
-      const names = data.map(d => d.name)
-      console.log("names:", names);
-
-      // datevalues
-      const datevalues = Array.from(d3.rollup(data, ([d]) => d.value, d => +d.date, d => d.name))
-            .map(([date, data]) => [new Date(date), data])
-            .sort(([a], [b]) => d3.ascending(a, b));
-      console.log(datevalues);
-      
-    })
-  </script>
 </html>
