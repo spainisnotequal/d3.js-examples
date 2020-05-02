@@ -14,15 +14,15 @@
   </body>
   <script>
 
-    // set the dimensions and margins of the graph
-    const margin = { top: 30, right: 30, bottom: 30, left: 50 };
-    const  width = 460 - margin.left - margin.right;
-    const  height = 400 - margin.top - margin.bottom;
-
     // get the data
     d3.csv("./data/numbers.csv", d3.autoType).then((data) => {
       // extract the values from the data (data is an arrary of { name, value } objects)
       const values = data.map((d) => d.value);
+
+      // set the dimensions and margins of the graph
+      const margin = { top: 30, right: 30, bottom: 30, left: 50 };
+      const  width = 460 - margin.left - margin.right;
+      const  height = 400 - margin.top - margin.bottom;
 
       // define the x axis
       const x = d3.scaleLinear()
