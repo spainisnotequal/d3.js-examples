@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Examples of plots and charts using the D3.js library</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+  </head>
+
+  <body>
+    <a href="/">Back home</a>
+    <div id='chart-div'></div>
+  </body>
+  <script>
+
+    // get the data
+    d3.csv("./data/alphabet.csv", d3.autoType).then((data) => {
+      // extract the values from the data (data is an arrary of { name, value } objects)
+      const values = data.map((d) => d.value);
+
+      // set the dimensions and margins of the graph
+      const margin = { top: 20, right: 0, bottom: 30, left: 40 };
+      const  width = 750 - margin.left - margin.right;
+      const  height = 500 - margin.top - margin.bottom;
+
+      // define the y axis
+      const y = d3.scaleLinear()
+            .domain([0, d3.max(data, (d) => d.frequency)])
+            .range([height - margin.bottom, margin.top]);
+      
+      // define the x axis
+      const x = d3.scaleBand()
+            .domain(data.map((d) => d.letter))
+            .rangeRound([margin.left, width - margin.right])
+            .padding(0.1);
+
+      // append the svg object to the body of the page
+      const svg = d3
+            .select("#chart-div")
+            .append("svg")
+            .attr("viewBox", [0, 0, width, height]);
+
+      svg.append("g")
+      .attr("fill", "steelblue")
+    .selectAll("rect")
+    .data(data)
+    .join("rect")
+      .attr("x", d => x(d.letter))
+      .attr("y", d => y(d.frequency))
+      .attr("height", d => y(0) - y(d.frequency))
+      .attr("width", x.bandwidth());
+
+      // create and append the X axis
+      const xAxis = g => g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+       svg.append("g").call(xAxis);
+      
+      // create and append the Y axis
+      const yAxis = g => g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y).ticks(null, "%"))
+            .call(g => g.select(".domain").remove());
+      svg.append("g").call(yAxis);
+
+      // create and append a title to the y axis
+      const yTitle = g => g.append("text")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 10)
+            .attr("y", 10)
+            .text("↑ Frequency");
+      svg.append("g").call(yTitle);
+    })
+    
+  </script>
+</html>
