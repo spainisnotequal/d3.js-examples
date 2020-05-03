@@ -26,6 +26,7 @@ const margin = {
 };
 const barSize = 48;
 const height = margin.top + barSize * n + margin.bottom;
+const width = 600;
 
 /* --------- */
 /* READ DATA */
