@@ -189,16 +189,13 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
         ));
   }
 
-  // /* ------------------- */
-  // /* TEXT TWEEN FUNCTION */
-  // /* ------------------- */
   // textTween function: D3 doesn’t transition text by default, so we need a function to do it
-  // function textTween(a, b) {
-  //   const i = d3.interpolateNumber(a, b);
-  //   return function (t) {
-  //     this.textContent = formatNumber(i(t));
-  //   };
-  // }
+  function textTween(a, b) {
+    const i = d3.interpolateNumber(a, b);
+    return function (t) {
+      this.textContent = formatNumber(i(t));
+    };
+  }
 
   // /* ---------------------- */
   // /* FORMAT NUMBER FUNCTION */
