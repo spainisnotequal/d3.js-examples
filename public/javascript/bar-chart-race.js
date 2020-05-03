@@ -16,11 +16,32 @@ const margin = {
 };
 
 // add a svg HTML element to the "chart-div" HTML element
-var svg = d3
+const svg = d3
   .select("body")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
+
+// add the title, subtitle and data source
+const title = svg
+  .append("text")
+  .attr("class", "title")
+  .attr("y", 24)
+  .html("18 years of Interbrand’s Top Global Brands");
+
+const subTitle = svg
+  .append("text")
+  .attr("class", "subTitle")
+  .attr("y", 55)
+  .html("Brand value, $m");
+
+const caption = svg
+  .append("text")
+  .attr("class", "caption")
+  .attr("x", width)
+  .attr("y", height - 5)
+  .style("text-anchor", "end")
+  .html("Source: Interbrand");
 
 // get the data
 d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
@@ -78,7 +99,6 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
 
   // add the (static) bars from the starting year "year" to the svg element
   const barPadding = (height - (margin.bottom + margin.top)) / (top_n * 5);
-
   svg
     .selectAll("rect.bar")
     .data(yearSlice, (d) => d.name)
