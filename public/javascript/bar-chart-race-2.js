@@ -48,6 +48,29 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
     .map(([date, data]) => [new Date(date), data]) // convert the number back to a date
     .sort(([a], [b]) => d3.ascending(a, b));
 
+  // helper function that computes the zero-based rank for each brand
+  function rank(value) {
+    const data = Array.from(names, (name) => ({ name, value: value(name) }));
+    data.sort((a, b) => d3.descending(a.value, b.value));
+    for (let i = 0; i < data.length; ++i) data[i].rank = Math.min(n, i);
+    return data;
+  }
+
+  // interpolate values linearly to animate rank changes more quickly
+  const keyframes = [];
+  let ka, a, kb, b;
+  for ([[ka, a], [kb, b]] of d3.pairs(datevalues)) {
+    for (let i = 0; i < k; ++i) {
+      const t = i / k;
+      keyframes.push([
+        new Date(ka * (1 - t) + kb * t),
+        rank((name) => (a.get(name) || 0) * (1 - t) + (b.get(name) || 0) * t),
+      ]);
+    }
+  }
+  keyframes.push([new Date(kb), rank((name) => b.get(name) || 0)]);
+  console.log("keyframes[0]:", keyframes[0]);
+
   // /* ------------- */
   // /* BARS FUNCTION */
   // /* ------------- */
