@@ -249,16 +249,13 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
     return (d) => scale(d.name);
   };
 
-  // /* -------- */
-  // /* POSITION */
-  // /* -------- */
-
-  // const x = d3.scaleLinear([0, 1], [margin.left, width - margin.right]);
-  // const y = d3
-  //   .scaleBand()
-  //   .domain(d3.range(n + 1))
-  //   .rangeRound([margin.top, margin.top + barSize * (n + 1 + 0.1)])
-  //   .padding(0.1);
+  // define functions to be able to change the domain of the plot as the animation runs
+  const x = d3.scaleLinear([0, 1], [margin.left, width - margin.right]);
+  const y = d3
+    .scaleBand()
+    .domain(d3.range(n + 1))
+    .rangeRound([margin.top, margin.top + barSize * (n + 1 + 0.1)])
+    .padding(0.1);
 
   /* ------------- */
   /* START DRAWING */
