@@ -163,7 +163,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     .call(halo, 10);
 
   // Animate the bars
-  let ticker = d3.interval((e) => {
+  let ticker = d3.interval(() => {
     yearSlice = data
       .filter((d) => d.year == year && !isNaN(d.value))
       .sort((a, b) => b.value - a.value)
@@ -190,7 +190,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .attr("class", (d) => `bar ${d.name.replace(/\s/g, "_")}`)
       .attr("x", x(0) + 1)
       .attr("width", (d) => x(d.value) - x(0) - 1)
-      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("y", () => y(top_n + 1) + 5)
       .attr("height", y(1) - y(0) - barPadding)
       .style("fill", (d) => d.colour)
       .transition()
@@ -211,7 +211,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .duration(tickDuration)
       .ease(d3.easeLinear)
       .attr("width", (d) => x(d.value) - x(0) - 1)
-      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("y", () => y(top_n + 1) + 5)
       .remove();
 
     let labels = svg.selectAll(".label").data(yearSlice, (d) => d.name);
@@ -221,7 +221,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .append("text")
       .attr("class", "label")
       .attr("x", (d) => x(d.value) - 8)
-      .attr("y", (d) => y(top_n + 1) + 5 + (y(1) - y(0)) / 2)
+      .attr("y", () => y(top_n + 1) + 5 + (y(1) - y(0)) / 2)
       .style("text-anchor", "end")
       .html((d) => d.name)
       .transition()
@@ -242,7 +242,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .duration(tickDuration)
       .ease(d3.easeLinear)
       .attr("x", (d) => x(d.value) - 8)
-      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("y", () => y(top_n + 1) + 5)
       .remove();
 
     let valueLabels = svg
@@ -254,7 +254,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .append("text")
       .attr("class", "valueLabel")
       .attr("x", (d) => x(d.value) + 5)
-      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("y", () => y(top_n + 1) + 5)
       .text((d) => d3.format(",.0f")(d.lastValue))
       .transition()
       .duration(tickDuration)
@@ -280,7 +280,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
       .duration(tickDuration)
       .ease(d3.easeLinear)
       .attr("x", (d) => x(d.value) + 5)
-      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("y", () => y(top_n + 1) + 5)
       .remove();
 
     yearText.html(~~year);
