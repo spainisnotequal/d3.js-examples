@@ -32,15 +32,6 @@ const height = margin.top + barSize * n + margin.bottom;
 /* --------- */
 
 d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
-  // inspect first 10 records
-  // data.splice(0, 10).map((d) => {
-  //   console.log("date:", d.date);
-  //   console.log("name:", d.name);
-  //   console.log("category:", d.category);
-  //   console.log("value:", d.value);
-  //   console.log("-----");
-  // });
-
   // get the brand names
   const names = new Set(data.map((d) => d.name));
 
@@ -56,9 +47,6 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
   )
     .map(([date, data]) => [new Date(date), data]) // convert the number back to a date
     .sort(([a], [b]) => d3.ascending(a, b));
-
-  // inspect first 10 datevalues
-  console.log(datevalues[0]);
 
   // /* ------------- */
   // /* BARS FUNCTION */
