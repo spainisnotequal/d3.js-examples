@@ -122,4 +122,15 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1)
     .style("text-anchor", "end")
     .html((d) => d.name);
+
+  // add the companies values as labels to the right of the bars
+  svg
+    .selectAll("text.valueLabel")
+    .data(yearSlice, (d) => d.name)
+    .enter()
+    .append("text")
+    .attr("class", "valueLabel")
+    .attr("x", (d) => x(d.value) + 5)
+    .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1)
+    .text((d) => d3.format(",.0f")(d.lastValue));
 });
