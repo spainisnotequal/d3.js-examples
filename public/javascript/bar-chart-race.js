@@ -23,7 +23,7 @@ const margin = {
 
 // add a svg HTML element to the "chart-div" HTML element
 const svg = d3
-  .select("body")
+  .select("#chart-div")
   .append("svg")
   .attr("width", width)
   .attr("height", height);
