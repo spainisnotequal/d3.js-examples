@@ -234,25 +234,20 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
       transition.end().then(() => now.text(formatDate(date)));
     };
   }
-  // /* -------------------- */
-  // /* FORMAT DATE FUNCTION */
-  // /* -------------------- */
+
   // function to format dates as four-digit years
   const formatDate = d3.utcFormat("%Y");
 
-  // /* -------------- */
-  // /* COLOR FUNCTION */
-  // /* -------------- */
-
-  // const color = () => {
-  //   const scale = d3.scaleOrdinal(d3.schemeTableau10);
-  //   if (data.some((d) => d.category !== undefined)) {
-  //     const categoryByName = new Map(data.map((d) => [d.name, d.category]));
-  //     scale.domain(Array.from(categoryByName.values()));
-  //     return (d) => scale(categoryByName.get(d.name));
-  //   }
-  //   return (d) => scale(d.name);
-  // };
+  // define the color of the bars using a category field if exists, or the name otherwise
+  const color = () => {
+    const scale = d3.scaleOrdinal(d3.schemeTableau10);
+    if (data.some((d) => d.category !== undefined)) {
+      const categoryByName = new Map(data.map((d) => [d.name, d.category]));
+      scale.domain(Array.from(categoryByName.values()));
+      return (d) => scale(categoryByName.get(d.name));
+    }
+    return (d) => scale(d.name);
+  };
 
   // /* -------- */
   // /* POSITION */
