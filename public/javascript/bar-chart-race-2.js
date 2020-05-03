@@ -237,7 +237,8 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
   // /* -------------------- */
   // /* FORMAT DATE FUNCTION */
   // /* -------------------- */
-  // const formatDate = d3.utcFormat("%Y");
+  // function to format dates as four-digit years
+  const formatDate = d3.utcFormat("%Y");
 
   // /* -------------- */
   // /* COLOR FUNCTION */
