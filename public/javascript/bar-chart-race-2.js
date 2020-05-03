@@ -200,26 +200,23 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
   // function to format values as whole numbers
   const formatNumber = d3.format(",d");
 
-  // /* ------------- */
-  // /* AXIS FUCNTION */
-  // /* ------------- */
-  // // Our x-axis is top-anchored and slightly customized.
-  // const axis = (svg) => {
-  //   const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
+  // function to draw the axes
+  function axis(svg) {
+    const g = svg.append("g").attr("transform", `translate(0,${margin.top})`);
 
-  //   const axis = d3
-  //     .axisTop(x)
-  //     .ticks(width / 160)
-  //     .tickSizeOuter(0)
-  //     .tickSizeInner(-barSize * (n + y.padding()));
+    const axis = d3
+      .axisTop(x)
+      .ticks(width / 160)
+      .tickSizeOuter(0)
+      .tickSizeInner(-barSize * (n + y.padding()));
 
-  //   return (_, transition) => {
-  //     g.transition(transition).call(axis);
-  //     g.select(".tick:first-of-type text").remove();
-  //     g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white");
-  //     g.select(".domain").remove();
-  //   };
-  // };
+    return (_, transition) => {
+      g.transition(transition).call(axis);
+      g.select(".tick:first-of-type text").remove();
+      g.selectAll(".tick:not(:first-of-type) line").attr("stroke", "white");
+      g.select(".domain").remove();
+    };
+  }
 
   // /* --------------- */
   // /* TICKER FUCNTION */
