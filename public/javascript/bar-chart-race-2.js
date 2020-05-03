@@ -69,7 +69,20 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
     }
   }
   keyframes.push([new Date(kb), rank((name) => b.get(name) || 0)]);
-  console.log("keyframes[0]:", keyframes[0]);
+
+  // deal with brands that enter and exit the top "n" companies
+  const nameframes = d3Array.groups(
+    keyframes.flatMap(([, data]) => data),
+    (d) => d.name
+  );
+  // previous rank position
+  const prev = new Map(
+    nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a]))
+  );
+  console.log("prev:", prev);
+  // next rank position
+  const next = new Map(nameframes.flatMap(([, data]) => d3.pairs(data)));
+  console.log("next:", next);
 
   // /* ------------- */
   // /* BARS FUNCTION */
