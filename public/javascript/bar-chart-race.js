@@ -133,4 +133,26 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     .attr("x", (d) => x(d.value) + 5)
     .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1)
     .text((d) => d3.format(",.0f")(d.lastValue));
+
+  // add the current year to the svg element
+  const halo = function (text, strokeWidth) {
+    text
+      .select(function () {
+        return this.parentNode.insertBefore(this.cloneNode(true), this);
+      })
+      .style("fill", "#ffffff")
+      .style("stroke", "#ffffff")
+      .style("stroke-width", strokeWidth)
+      .style("stroke-linejoin", "round")
+      .style("opacity", 1);
+  };
+
+  let yearText = svg
+    .append("text")
+    .attr("class", "yearText")
+    .attr("x", width - margin.right)
+    .attr("y", height - 25)
+    .style("text-anchor", "end")
+    .html(~~year)
+    .call(halo, 10);
 });
