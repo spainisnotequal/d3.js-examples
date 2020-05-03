@@ -75,4 +75,19 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     .call(xAxis)
     .selectAll(".tick line")
     .classed("origin", (d) => d == 0);
+
+  // add the (static) bars from the starting year "year" to the svg element
+  const barPadding = (height - (margin.bottom + margin.top)) / (top_n * 5);
+
+  svg
+    .selectAll("rect.bar")
+    .data(yearSlice, (d) => d.name)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", x(0) + 1)
+    .attr("width", (d) => x(d.value) - x(0) - 1)
+    .attr("y", (d) => y(d.rank) + 5)
+    .attr("height", y(1) - y(0) - barPadding)
+    .style("fill", (d) => d.colour);
 });
