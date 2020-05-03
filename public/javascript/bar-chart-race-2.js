@@ -79,44 +79,46 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
   const prev = new Map(
     nameframes.flatMap(([, data]) => d3.pairs(data, (a, b) => [b, a]))
   );
-  console.log("prev:", prev);
   // next rank position
   const next = new Map(nameframes.flatMap(([, data]) => d3.pairs(data)));
-  console.log("next:", next);
 
-  // /* ------------- */
-  // /* BARS FUNCTION */
-  // /* ------------- */
-  // const bars = (svg) => {
-  //   let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
+  /* -------------------------------------- */
+  /* DEFINE SOME FUNCTIONS TO DRAW ELEMENTS */
+  /* -------------------------------------- */
 
-  //   return ([date, data], transition) =>
-  //     (bar = bar
-  //       .data(data.slice(0, n), (d) => d.name)
-  //       .join(
-  //         (enter) =>
-  //           enter
-  //             .append("rect")
-  //             .attr("fill", color)
-  //             .attr("height", y.bandwidth())
-  //             .attr("x", x(0))
-  //             .attr("y", (d) => y((prev.get(d) || d).rank))
-  //             .attr("width", (d) => x((prev.get(d) || d).value) - x(0)),
-  //         (update) => update,
-  //         (exit) =>
-  //           exit
-  //             .transition(transition)
-  //             .remove()
-  //             .attr("y", (d) => y((next.get(d) || d).rank))
-  //             .attr("width", (d) => x((next.get(d) || d).value) - x(0))
-  //       )
-  //       .call((bar) =>
-  //         bar
-  //           .transition(transition)
-  //           .attr("y", (d) => y(d.rank))
-  //           .attr("width", (d) => x(d.value) - x(0))
-  //       ));
-  // };
+  // Previous note: the next four chart components, starting with the bars here, are implemented as functions that are passed a selection of the chart’s root SVG element
+
+  // draw bars function
+  function bars(svg) {
+    let bar = svg.append("g").attr("fill-opacity", 0.6).selectAll("rect");
+
+    return ([date, data], transition) =>
+      (bar = bar
+        .data(data.slice(0, n), (d) => d.name)
+        .join(
+          (enter) =>
+            enter
+              .append("rect")
+              .attr("fill", color)
+              .attr("height", y.bandwidth())
+              .attr("x", x(0))
+              .attr("y", (d) => y((prev.get(d) || d).rank))
+              .attr("width", (d) => x((prev.get(d) || d).value) - x(0)),
+          (update) => update,
+          (exit) =>
+            exit
+              .transition(transition)
+              .remove()
+              .attr("y", (d) => y((next.get(d) || d).rank))
+              .attr("width", (d) => x((next.get(d) || d).value) - x(0))
+        )
+        .call((bar) =>
+          bar
+            .transition(transition)
+            .attr("y", (d) => y(d.rank))
+            .attr("width", (d) => x(d.value) - x(0))
+        ));
+  }
 
   // /* --------------- */
   // /* LABELS FUNCTION */
@@ -275,4 +277,8 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
   //   .domain(d3.range(n + 1))
   //   .rangeRound([margin.top, margin.top + barSize * (n + 1 + 0.1)])
   //   .padding(0.1);
+
+  /* ------------- */
+  /* START DRAWING */
+  /* ------------- */
 });
