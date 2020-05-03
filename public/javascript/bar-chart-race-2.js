@@ -197,10 +197,8 @@ d3.csv("../data/category-brands.csv", d3.autoType).then((data) => {
     };
   }
 
-  // /* ---------------------- */
-  // /* FORMAT NUMBER FUNCTION */
-  // /* ---------------------- */
-  // const formatNumber = d3.format(",d");
+  // function to format values as whole numbers
+  const formatNumber = d3.format(",d");
 
   // /* ------------- */
   // /* AXIS FUCNTION */
