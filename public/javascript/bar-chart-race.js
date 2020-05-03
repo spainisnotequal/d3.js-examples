@@ -1,7 +1,13 @@
 import * as d3 from "https://unpkg.com/d3?module";
 
-// start animation in 2000
-const year = 2000;
+// change data each 500 miliseconds
+const tickDuration = 500;
+
+// start animation year
+let year = 2015;
+// stop animation year
+const stopYear = 2018;
+
 // only use the top 12 companies
 const top_n = 12;
 
@@ -27,7 +33,7 @@ const title = svg
   .append("text")
   .attr("class", "title")
   .attr("y", 24)
-  .html("18 years of Interbrand’s Top Global Brands");
+  .html(`${stopYear - year} years of Interbrand’s Top Global Brands`);
 
 const subTitle = svg
   .append("text")
@@ -64,7 +70,7 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
   // });
 
   // get some data from the start year "year" to configure some plot options
-  const yearSlice = data
+  let yearSlice = data
     .filter((d) => d.year == year && !isNaN(d.value))
     .sort((a, b) => b.value - a.value)
     .slice(0, top_n);
@@ -155,4 +161,131 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     .style("text-anchor", "end")
     .html(~~year)
     .call(halo, 10);
+
+  // Animate the bars
+  let ticker = d3.interval((e) => {
+    yearSlice = data
+      .filter((d) => d.year == year && !isNaN(d.value))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, top_n);
+
+    yearSlice.forEach((d, i) => (d.rank = i));
+
+    //console.log('IntervalYear: ', yearSlice);
+
+    x.domain([0, d3.max(yearSlice, (d) => d.value)]);
+
+    svg
+      .select(".xAxis")
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .call(xAxis);
+
+    let bars = svg.selectAll(".bar").data(yearSlice, (d) => d.name);
+
+    bars
+      .enter()
+      .append("rect")
+      .attr("class", (d) => `bar ${d.name.replace(/\s/g, "_")}`)
+      .attr("x", x(0) + 1)
+      .attr("width", (d) => x(d.value) - x(0) - 1)
+      .attr("y", (d) => y(top_n + 1) + 5)
+      .attr("height", y(1) - y(0) - barPadding)
+      .style("fill", (d) => d.colour)
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("y", (d) => y(d.rank) + 5);
+
+    bars
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("width", (d) => x(d.value) - x(0) - 1)
+      .attr("y", (d) => y(d.rank) + 5);
+
+    bars
+      .exit()
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("width", (d) => x(d.value) - x(0) - 1)
+      .attr("y", (d) => y(top_n + 1) + 5)
+      .remove();
+
+    let labels = svg.selectAll(".label").data(yearSlice, (d) => d.name);
+
+    labels
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("x", (d) => x(d.value) - 8)
+      .attr("y", (d) => y(top_n + 1) + 5 + (y(1) - y(0)) / 2)
+      .style("text-anchor", "end")
+      .html((d) => d.name)
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1);
+
+    labels
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("x", (d) => x(d.value) - 8)
+      .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1);
+
+    labels
+      .exit()
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("x", (d) => x(d.value) - 8)
+      .attr("y", (d) => y(top_n + 1) + 5)
+      .remove();
+
+    let valueLabels = svg
+      .selectAll(".valueLabel")
+      .data(yearSlice, (d) => d.name);
+
+    valueLabels
+      .enter()
+      .append("text")
+      .attr("class", "valueLabel")
+      .attr("x", (d) => x(d.value) + 5)
+      .attr("y", (d) => y(top_n + 1) + 5)
+      .text((d) => d3.format(",.0f")(d.lastValue))
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1);
+
+    valueLabels
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("x", (d) => x(d.value) + 5)
+      .attr("y", (d) => y(d.rank) + 5 + (y(1) - y(0)) / 2 + 1)
+      .tween("text", function (d) {
+        let i = d3.interpolateRound(d.lastValue, d.value);
+        return function (t) {
+          this.textContent = d3.format(",")(i(t));
+        };
+      });
+
+    valueLabels
+      .exit()
+      .transition()
+      .duration(tickDuration)
+      .ease(d3.easeLinear)
+      .attr("x", (d) => x(d.value) + 5)
+      .attr("y", (d) => y(top_n + 1) + 5)
+      .remove();
+
+    yearText.html(~~year);
+
+    if (year == stopYear) ticker.stop();
+    year = d3.format(".1f")(+year + 0.1);
+  }, tickDuration);
 });
