@@ -29,25 +29,20 @@ const svg = d3
   .attr("height", height);
 
 // add the title, subtitle and data source
-const title = svg
-  .append("text")
-  .attr("class", "title")
-  .attr("y", 24)
-  .html(`${stopYear - year} years of Interbrand’s Top Global Brands`);
+const title = `${stopYear - year} years of Interbrand’s Top Global Brands`;
+svg.append("text").attr("class", "title").attr("y", 24).html(title);
 
-const subTitle = svg
-  .append("text")
-  .attr("class", "subTitle")
-  .attr("y", 55)
-  .html("Brand value, $m");
+const subTitle = "Brand value, $m";
+svg.append("text").attr("class", "subTitle").attr("y", 55).html(subTitle);
 
-const caption = svg
+const caption = "Source: Interbrand";
+svg
   .append("text")
   .attr("class", "caption")
   .attr("x", width)
   .attr("y", height - 5)
   .style("text-anchor", "end")
-  .html("Source: Interbrand");
+  .html(caption);
 
 // get the data
 d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
