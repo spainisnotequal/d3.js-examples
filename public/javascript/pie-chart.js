@@ -80,7 +80,7 @@ async function init() {
   /* CREATE THE CHART */
   /* ---------------- */
 
-  const path = svg
+  let path = svg
     .selectAll("path") // select all path elements inside the svg. specifically the 'g' element. they don't exist yet but they will be created below
     .data(pie(dataset)) //associate dataset wit he path elements we're about to create. must pass through the pie function. it magically knows how to extract values and bakes it into the pie
     .enter() //creates placeholder nodes for each of the values
@@ -125,17 +125,17 @@ async function init() {
   /* CREATE THE LEGEND */
   /* ----------------- */
   // define legend
-  const legend = svg
+  var legend = svg
     .selectAll(".legend") // selecting elements with class 'legend'
     .data(color.domain()) // refers to an array of labels from our dataset
     .enter() // creates placeholder
     .append("g") // replace placeholders with g elements
     .attr("class", "legend") // each g is given a legend class
-    .attr("transform", (d, i) => {
-      const height = legendRectSize + legendSpacing; // height of element is the height of the colored square plus the spacing
-      const offset = (height * color.domain().length) / 2; // vertical offset of the entire legend = height of a single element & half the total number of elements
-      const horz = 18 * legendRectSize; // the legend is shifted to the left to make room for the text
-      const vert = i * height - offset; // the top of the element is hifted up or down from the center using the offset defiend earlier and the index of the current element 'i'
+    .attr("transform", function (d, i) {
+      var height = legendRectSize + legendSpacing; // height of element is the height of the colored square plus the spacing
+      var offset = (height * color.domain().length) / 2; // vertical offset of the entire legend = height of a single element & half the total number of elements
+      var horz = 18 * legendRectSize; // the legend is shifted to the left to make room for the text
+      var vert = i * height - offset; // the top of the element is hifted up or down from the center using the offset defiend earlier and the index of the current element 'i'
       return "translate(" + horz + "," + vert + ")"; //return translation
     });
 
@@ -146,11 +146,11 @@ async function init() {
     .attr("height", legendRectSize) // height of rect size is defined above
     .style("fill", color) // each fill is passed a color
     .style("stroke", color) // each stroke is passed a color
-    .on("click", (label) => {
-      const rect = d3.select(this); // this refers to the colored squared just clicked
-      const enabled = true; // set enabled true to default
-      const totalEnabled = d3.sum(
-        dataset.map((d) => {
+    .on("click", function (label) {
+      var rect = d3.select(this); // this refers to the colored squared just clicked
+      var enabled = true; // set enabled true to default
+      var totalEnabled = d3.sum(
+        dataset.map(function (d) {
           // can't disable all options
           return d.enabled ? 1 : 0; // return 1 for each enabled entry. and summing it up
         })
@@ -166,7 +166,7 @@ async function init() {
         enabled = false; // set enabled to false
       }
 
-      pie.value((d) => {
+      pie.value(function (d) {
         if (d.label === label) d.enabled = enabled; // if entry label matches legend label
         return d.enabled ? d.count : 0; // update enabled property and return count or 0 based on the entry's status
       });
@@ -178,7 +178,7 @@ async function init() {
         .duration(750) //
         .attrTween("d", function (d) {
           // 'd' specifies the d attribute that we'll be animating
-          const interpolate = d3.interpolate(this._current, d); // this = current path element
+          var interpolate = d3.interpolate(this._current, d); // this = current path element
           this._current = interpolate(0); // interpolate between current value and the new value of 'd'
           return function (t) {
             return arc(interpolate(t));
