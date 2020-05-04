@@ -12,8 +12,8 @@ const stopYear = 2018;
 const top_n = 12;
 
 // set plot dimensions and margins
-const height = 600;
-const width = 960;
+const height = 400;
+const width = 700;
 const margin = {
   top: 80,
   right: 5,
@@ -45,7 +45,19 @@ svg
   .html(caption);
 
 // get the data
-d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
+function getDataFromCsv(url) {
+  return new Promise((resolve, reject) => {
+    d3.csv(url, d3.autoType)
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
+  });
+}
+
+// function to make the animation
+const init = async () => {
+  // get the data
+  const data = await getDataFromCsv("../data/brand-values.csv");
+
   // process the data before using it
   data.map((d) => {
     d.value = Number(d.value);
@@ -283,4 +295,6 @@ d3.csv("../data/brand-values.csv", d3.autoType).then((data) => {
     if (year == stopYear) ticker.stop();
     year = d3.format(".1f")(+year + 0.1);
   }, tickDuration);
-});
+};
+
+init();
